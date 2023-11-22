@@ -71,11 +71,21 @@ article {
   box-shadow: 1px 2px;
 }
 
-.selectBtn {
+.jumpBtn {
   margin-top: 5px;
   float: left;
   border: 1px solid black;
+  box-shadow: 1px 2px;
+  background-color: rgb(157 159 144);
 }
+
+#jumpBtn {
+  margin-left: calc(50% - 75px);
+}
+
+
+
+
 
 
   

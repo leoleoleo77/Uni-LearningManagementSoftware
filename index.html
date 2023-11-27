@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
-<script src="initScript.js"></script>
 </head>
 <body >
 
@@ -13,9 +12,9 @@
   <h2>Quiz!</h2>
 </header>
 
-<div class="timer">
+<p id="timer">
 Time: no time!
-</div>
+</p>
 
 <!-- quiz content-->
 <section>
@@ -46,7 +45,7 @@ Time: no time!
       ...
     </button>
   </div>
-    <button class="footerBtn">
+    <button class="footerBtn" onclick="ShowResults()">
       Submit
     </button>
     <button class="footerBtn" onclick="NextQuestion()">

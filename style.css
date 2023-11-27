@@ -69,6 +69,11 @@ article {
   background-color: rgb(157 159 144);
   border: solid black 1px;
   box-shadow: 1px 2px;
+  cursor: pointer;
+}
+
+.footerBtn:hover {
+  background-color: rgb(203 204 196);
 }
 
 .jumpBtn {
@@ -77,12 +82,26 @@ article {
   border: 1px solid black;
   box-shadow: 1px 2px;
   background-color: rgb(157 159 144);
+  cursor: pointer;
+}
+
+.jumpBtn:hover {
+  background-color: rgb(203 204 196);
 }
 
 #jumpBtn {
   margin-left: calc(50% - 75px);
 }
 
+h3 {
+  font-size: 20px;
+  color: rgb(50 75 32);
+}
+
+#timer {
+  text-align: right;
+  margin-bottom: -0.3%;
+}
 
 
 

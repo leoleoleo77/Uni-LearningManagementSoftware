@@ -4,6 +4,7 @@
 <title>Quiz</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body >
@@ -12,8 +13,7 @@
   <h2>Quiz!</h2>
 </header>
 
-<p id="timer">
-Time: no time!
+<p id="timer">  
 </p>
 
 <!-- quiz content-->
@@ -25,13 +25,13 @@ Time: no time!
 
 <!-- footer buttons-->
 <div>
-    <button class="footerBtn" onclick="ShowResults()">
+    <button class="footerBtn" id="subBtn" onclick="ShowResults()">
       Submit
     </button>
-    <button class="footerBtn" onclick="NextQuestion()">
+    <button class="footerBtn" id="nextBtn" onclick="NextQuestion()">
       Next
     </button>
-    <button class="footerBtn" onclick="PrevQuestion()">
+    <button class="footerBtn" id="prevBtn" onclick="PrevQuestion()">
       Previous
     </button>
 </div>

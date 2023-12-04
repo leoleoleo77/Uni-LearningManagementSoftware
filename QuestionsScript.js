@@ -1,3 +1,4 @@
+// #region Random shenanigans...
 // Get a random integer between two values
 // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 function getRandomInt(min, max) {
@@ -23,8 +24,7 @@ do {
         i++
     }
 } while (i < 6)
-
-let total_time_left = 0;
+//#endregion
 
 class QuizQuestion {
     // Constructor!
@@ -39,27 +39,26 @@ class QuizQuestion {
         this.questionType = questionType;
         this.correctAnswers = correctAnswers;
         this.local_time_left = local_time_left;
-        total_time_left += local_time_left; // sucks ass
     }
 
 
     // DIY constructor for true or false type questions
-    static TrueOrFalse(question, choice1, choice2, correctAnswers, local_time_left=60) {
-        question += '<br>';
+    static TrueOrFalse(question, choice1, choice2, correctAnswers, local_time_left=20) {
+        question += '<br><br>';
         return new QuizQuestion(question, [0, 0], "", choice1, choice2, "", "", "TrueOrFalse", correctAnswers, local_time_left)
     }
 
-    static MultipleChoice(question, choice1, choice2, choice3, correctAnswers, local_time_left=60) {
-        question += '<br>';
+    static MultipleChoice(question, choice1, choice2, choice3, correctAnswers, local_time_left=20) {
+        question += '<br><br>';
         return new QuizQuestion(question, [0, 0, 0], "", choice1, choice2, choice3, "", "MultipleChoice", correctAnswers, local_time_left)
     }
 
-    static MultipleAnswer(question, choice1, choice2, choice3, choice4, correctAnswers, local_time_left=60) {
-        question += '<br>';
+    static MultipleAnswer(question, choice1, choice2, choice3, choice4, correctAnswers, local_time_left=30) {
+        question += '<br><br>';
         return new QuizQuestion(question, [0, 0, 0, 0], "", choice1, choice2, choice3, choice4, "MultipleAnswers", correctAnswers, local_time_left)
     }
 
-    static CompleteSentence(question, choice1, correctAnswers, local_time_left=60) {
+    static CompleteSentence(question, choice1, correctAnswers, local_time_left=40) {
         return new QuizQuestion(question, [""], "", choice1, "", "", "", "CompleteSentence", correctAnswers, local_time_left)
     }
 
@@ -81,6 +80,17 @@ class QuizQuestion {
         return this.question
         + this.pairWords
         + this.choice1
+        + this.choice2
+        + this.choice3
+        + this.choice4;
+    }
+
+    get Answers() {
+        return this.constructAnswers();
+    }
+
+    constructAnswers() {
+        return this.choice1
         + this.choice2
         + this.choice3
         + this.choice4;
@@ -126,7 +136,6 @@ class QuizQuestion {
     }
 
     SaveWordsAnwers(data) {
-
         // Firstly depending on the new parent the word's text is insertend into the userAnswers array
         if (data[1].id == "option0") {
             this.userAnswers[0] = data[1].firstChild.innerHTML
@@ -172,15 +181,15 @@ class QuizQuestion {
     // But with 3 choices
     FormatMultipleChoiceQuestions(ans) {
         if (ans == 0) {
-            this.choice1 = this.choice1.substr(0, 7) + "checked " + this.choice1.substr(7);
+            this.choice1 = this.choice1.substr(0, 9) + "checked " + this.choice1.substr(9);
             this.choice2 = this.choice2.replace("checked ", "");
             this.choice3 = this.choice3.replace("checked ", "");
         } else if (ans == 1) {
-            this.choice2 = this.choice2.substr(0, 7) + "checked " + this.choice2.substr(7);
+            this.choice2 = this.choice2.substr(0, 9) + "checked " + this.choice2.substr(9);
             this.choice3 = this.choice3.replace("checked ", "");
             this.choice1 = this.choice1.replace("checked ", "");
         } else {
-            this.choice3 = this.choice3.substr(0, 7) + "checked " + this.choice3.substr(7);
+            this.choice3 = this.choice3.substr(0, 9) + "checked " + this.choice3.substr(9);
             this.choice1 = this.choice1.replace("checked ", "");
             this.choice2 = this.choice2.replace("checked ", "");
         }
@@ -193,25 +202,25 @@ class QuizQuestion {
             if (this.choice1.includes("checked")) {
                 this.choice1 = this.choice1.replace("checked ", "");
             } else {
-                this.choice1 = this.choice1.substr(0, 7) + "checked " + this.choice1.substr(7);
+                this.choice1 = this.choice1.substr(0, 9) + "checked " + this.choice1.substr(9);
             }
         } else if (ans == 1) {
             if (this.choice2.includes("checked")) {
                 this.choice2 = this.choice2.replace("checked ", "");
             } else {
-                this.choice2 = this.choice2.substr(0, 7) + "checked " + this.choice2.substr(7);
+                this.choice2 = this.choice2.substr(0, 9) + "checked " + this.choice2.substr(9);
             }
         } else if (ans == 2) {
             if (this.choice3.includes("checked")) {
                 this.choice3 = this.choice3.replace("checked ", "");
             } else {
-                this.choice3 = this.choice3.substr(0, 7) + "checked " + this.choice3.substr(7);
+                this.choice3 = this.choice3.substr(0, 9) + "checked " + this.choice3.substr(9);
             }
         } else {
             if (this.choice4.includes("checked")) {
                 this.choice4 = this.choice4.replace("checked ", "");
             } else {
-                this.choice4 = this.choice4.substr(0, 7) + "checked " + this.choice4.substr(7);
+                this.choice4 = this.choice4.substr(0, 9) + "checked " + this.choice4.substr(9);
             }
         }
     }
@@ -232,19 +241,19 @@ class QuizQuestion {
         let all_but_second_word;
         let second_word;
         if (data[1].id == "option0") {
-            all_but_second_word = this.choice1.match(/<div(.*)div>/g);
+            all_but_second_word = this.choice1.match(/[A|B|C|D]\)<div(.*)div>/g);
             second_word = this.choice1.substr(all_but_second_word[0].length)
             this.choice1 = data[1].outerHTML.toString() + second_word;
         } else if (data[1].id == "option1") {
-            all_but_second_word = this.choice2.match(/<div(.*)div>/g);
+            all_but_second_word = this.choice2.match(/[A|B|C|D]\)<div(.*)div>/g);
             second_word = this.choice2.substr(all_but_second_word[0].length)
             this.choice2 = data[1].outerHTML.toString() + second_word;
         } else if (data[1].id == "option2") {
-            all_but_second_word = this.choice3.match(/<div(.*)div>/g);
+            all_but_second_word = this.choice3.match(/[A|B|C|D]\)<div(.*)div>/g);
             second_word = this.choice3.substr(all_but_second_word[0].length)
             this.choice3 = data[1].outerHTML.toString() + second_word;
         } else {
-            all_but_second_word = this.choice4.match(/<div(.*)div>/g);
+            all_but_second_word = this.choice4.match(/[A|B|C|D]\)<div(.*)div>/g);
             second_word = this.choice4.substr(all_but_second_word[0].length)
             this.choice4 = data[1].outerHTML.toString() + second_word;
         }
@@ -264,15 +273,137 @@ class QuizQuestion {
             }
         }
     }
+
+    // Calculate the score for each type of question
+    CalqulateScore() {
+        if (this.questionType == "TrueOrFalse" || this.questionType == "MultipleChoice") {
+            let numOfQuestions = this.correctAnswers.length;
+            for (let i = 0; i < numOfQuestions; i++) {
+                if (this.userAnswers[i] == 1) {
+                    if (this.userAnswers[i] == this.correctAnswers[i]) {
+                        return 1;
+                    }
+                }
+            }
+        // For Multiple Answers type question the user is subtracted
+        // points if they check a false answer
+        } else if (this.questionType == "MultipleAnswers") {   
+            let numOfCorrAns = 0;
+            let numOfWrongAns = 0;
+            let answers = 0;
+            for (let i = 0; i < 4; i++) {
+                if (this.userAnswers[i] == 1) {
+                    if (this.userAnswers[i] == this.correctAnswers[i]) {
+                        numOfCorrAns++;
+                    } else {
+                        numOfWrongAns++;
+                    }
+                } 
+                answers += this.correctAnswers[i];
+            }
+            if (numOfWrongAns >= numOfCorrAns) {
+                return 0
+            } else {
+                return (numOfCorrAns - numOfWrongAns)/answers;
+            }
+        // For questions where the user have to complete the sentence
+        // the check is case insensitive
+        } else if (this.questionType == "CompleteSentence") {   
+            if(this.userAnswers[0].toUpperCase() == this.correctAnswers[0].toUpperCase()) {
+                return 1
+            }
+            return 0
+        } else if (this.questionType == "PairWords" || this.questionType == "WordArrangement") {
+            let answers = 4;
+            // Some Word Arrangement type questions have 3 answers isntead of 4
+            if (this.correctAnswers[3] == "") {
+                answers = 3;
+            }
+            let numOfCorrAns = 0;
+            for (let i = 0; i < answers; i++) {
+                if (this.userAnswers[i] == this.correctAnswers[i]) {
+                    numOfCorrAns++;
+                }
+            }
+            return numOfCorrAns/answers;
+        }
+        return 0;
+    }
+
+    // Shows the correct answers...
+    ShowCorrectAnswers() {
+        let text;
+        if (this.questionType == "TrueOrFalse") {
+            text = "<br>Σωστή απάντηση: ";
+            if (this.correctAnswers[0] == 1) {
+                return text + "Αληθές"
+            } else {
+                return text + "Ψευδές"
+            }
+        } else if (this.questionType == "MultipleChoice") { 
+            text = "Σωστή απάντηση: "; 
+            let indexOfCorrAns = this.correctAnswers.indexOf(1)
+            if (indexOfCorrAns == 0) {
+                return text + "A";
+            } else if (indexOfCorrAns == 1) {
+                return text + "B";
+            } else {
+                return text + "C";
+            }
+        } else if (this.questionType == "MultipleAnswers") {  
+            text = "Σωστές απαντήσεις: ";
+            for (let i = 0; i < 4; i++) {
+                if (this.correctAnswers[i] == 1) {
+                    if (i == 0) {
+                        text += "A, ";
+                    } else if (i == 1) {
+                        text += "B, ";
+                    } else if (i == 2) {
+                        text += "C, ";
+                    } else if (i == 3) {
+                        text += "D, ";
+                    }
+                }
+            }
+            return text;
+        } else if (this.questionType == "CompleteSentence") {
+            text = "Σωστή απάντηση: ";  
+            return text + this.correctAnswers[0];
+        } else {
+            text = "Σωστές απαντήσεις:<br>";
+            let answers = 4;
+            if (this.correctAnswers[3] == "") {
+                answers = 3;
+            } for (let i = 0; i < answers; i++) {
+                if (i == 0) {
+                    text += `A) ${this.correctAnswers[i]}<br>`;
+                } else if (i == 1) {
+                    text += `B) ${this.correctAnswers[i]}<br>`;
+                } else if (i == 2) {
+                    text += `C) ${this.correctAnswers[i]}<br>`;
+                } else if (i == 3) {
+                    text += `D) ${this.correctAnswers[i]}<br>`;
+                }
+            }
+            return text;
+        }
+    }
+
+    // Called everytime the interval fires (every second)
+    // changes the value of the local time left by -1
+    UpdateLocalTimeLeft() {
+        this.local_time_left--;
+        return this.local_time_left;
+    }
 }
 
-// #region define questions
+// #region Define questions
 
 // #region True or False qeustions
 let q0 = QuizQuestion.TrueOrFalse
 (
     'Οι ζώνες στο Brazilian Jiu-Jitsu συμβολίζουν το επίπεδο επιδεξιότητας του αθλητή.', // question
-    '<input type="radio" id="q0ans1" name="question0" onclick="q0.SaveAnswer(0)"><label for="q0ans1">Αλήθές</label>', // choice 1
+    '<input type="radio" id="q0ans1" name="question0" onclick="q0.SaveAnswer(0)"><label for="q0ans1">Αλήθές</label> ', // choice 1
     '<input type="radio" id="q0ans2" name="question0" onclick="q0.SaveAnswer(1)"><label for="q0ans2">Ψευδές</label>', // choice 2
     [1 , 0] // correct answers
 )
@@ -280,7 +411,7 @@ let q0 = QuizQuestion.TrueOrFalse
 let q1 = QuizQuestion.TrueOrFalse
 (
     'Η έκφραση "OSS" που χρησιμοποιείται συχνά στο Brazilian Jiu-Jitsu σημαίνει "Only Submissions Succeed".', // question
-    '<input type="radio" id="q1ans1" name="question1" onclick="q1.SaveAnswer(0)"><label for="q1ans1">Αλήθές</label>', // choice 1
+    '<input type="radio" id="q1ans1" name="question1" onclick="q1.SaveAnswer(0)"><label for="q1ans1">Αλήθές</label> ', // choice 1
     '<input type="radio" id="q1ans2" name="question1" onclick="q1.SaveAnswer(1)"><label for="q1ans2">Ψευδές</label>', // choice 2
     [1 , 0] // correct answers
 )
@@ -288,7 +419,7 @@ let q1 = QuizQuestion.TrueOrFalse
 let q2 = QuizQuestion.TrueOrFalse
 (
     'Στο Brazilian Jiu-Jitsu, ο όρος "Shrimping" αναφέρεται σε ένα είδος χτυπήματος.', // question
-    '<input type="radio" id="q2ans1" name="question2" onclick="q2.SaveAnswer(0)"><label for="q2ans1">Αλήθές</label>', // choice 1
+    '<input type="radio" id="q2ans1" name="question2" onclick="q2.SaveAnswer(0)"><label for="q2ans1">Αλήθές</label> ', // choice 1
     '<input type="radio" id="q2ans2" name="question2" onclick="q2.SaveAnswer(1)"><label for="q2ans2">Ψευδές</label>', // choice 2
     [0, 1] // correct answers
 )
@@ -298,45 +429,45 @@ let q2 = QuizQuestion.TrueOrFalse
 let q3 = QuizQuestion.MultipleChoice
 (
     'Ποιος από τους παρακάτω θεωρείται "πατέρας" του Brazilian Jiu-Jitsu;', // question
-    '<input type="radio" id="q3ans1" name="question3" onclick="q3.SaveAnswer(0)"><label for="q3ans1">Bruce Lee</label><br>', // choice 1
-    '<input type="radio" id="q3ans2" name="question3" onclick="q3.SaveAnswer(1)"><label for="q3ans2">Helio Gracie</label><br>', // choice 2
-    '<input type="radio" id="q3ans3" name="question3" onclick="q3.SaveAnswer(2)"><label for="q3ans3">Muhammad Ali</label><br>', // choice 3
+    'A)<input type="radio" id="q3ans1" name="question3" onclick="q3.SaveAnswer(0)"><label for="q3ans1">Bruce Lee</label><br>', // choice 1
+    'B)<input type="radio" id="q3ans2" name="question3" onclick="q3.SaveAnswer(1)"><label for="q3ans2">Helio Gracie</label><br>', // choice 2
+    'C)<input type="radio" id="q3ans3" name="question3" onclick="q3.SaveAnswer(2)"><label for="q3ans3">Muhammad Ali</label><br>', // choice 3
     [0, 1, 0] // correct answers
 )
 
 let q4 = QuizQuestion.MultipleChoice
 (
     'Ποιο από τα παρακάτω ΔΕΝ είναι ένας τύπος τεχνικής υποταγής στο Brazilian Jiu-Jitsu;', // question
-    '<input type="radio" id="q4ans1" name="question4" onclick="q4.SaveAnswer(0)"><label for="q4ans1">Armbar</label><br>', // choice 1
-    '<input type="radio" id="q4ans2" name="question4" onclick="q4.SaveAnswer(1)"><label for="q4ans2">Rear Naked Choke</label><br>', // choice 2
-    '<input type="radio" id="q4ans3" name="question4" onclick="q4.SaveAnswer(2)"><label for="q4ans3">Roundhouse Kick</label><br>', // choice 3
+    'A)<input type="radio" id="q4ans1" name="question4" onclick="q4.SaveAnswer(0)"><label for="q4ans1">Armbar</label><br>', // choice 1
+    'B)<input type="radio" id="q4ans2" name="question4" onclick="q4.SaveAnswer(1)"><label for="q4ans2">Rear Naked Choke</label><br>', // choice 2
+    'C)<input type="radio" id="q4ans3" name="question4" onclick="q4.SaveAnswer(2)"><label for="q4ans3">Roundhouse Kick</label><br>', // choice 3
     [0, 0, 1] // correct answers
 )
 
 let q5 = QuizQuestion.MultipleChoice
 (
     'Η "guard" στο Brazilian Jiu-Jitsu αναφέρεται σε:', // question
-    '<input type="radio" id="q5ans1" name="question5" onclick="q5.SaveAnswer(0)"><label for="q5ans1">Στάση που ο αθλητής βρίσκεται στο έδαφος</label><br>', // choice 1
-    '<input type="radio" id="q5ans2" name="question5" onclick="q5.SaveAnswer(1)"><label for="q5ans2">Υποταγή</label><br>', // choice 2
-    '<input type="radio" id="q5ans3" name="question5" onclick="q5.SaveAnswer(2)"><label for="q5ans3">Στάση που ο αθλητής βρίσκεται όρθιος</label><br>', // choice 3
+    'A)<input type="radio" id="q5ans1" name="question5" onclick="q5.SaveAnswer(0)"><label for="q5ans1">Στάση που ο αθλητής βρίσκεται στο έδαφος</label><br>', // choice 1
+    'B)<input type="radio" id="q5ans2" name="question5" onclick="q5.SaveAnswer(1)"><label for="q5ans2">Υποταγή</label><br>', // choice 2
+    'C)<input type="radio" id="q5ans3" name="question5" onclick="q5.SaveAnswer(2)"><label for="q5ans3">Στάση που ο αθλητής βρίσκεται όρθιος</label><br>', // choice 3
     [1, 0, 0] // correct answers
 )
 
 let q6 = QuizQuestion.MultipleChoice
 (
     'Η έκφραση "rolling" στο Brazilian Jiu-Jitsu αναφέρεται σε:', // question
-    '<input type="radio" id="q6ans1" name="question6" onclick="q6.SaveAnswer(0)"><label for="q6ans1">Την κίνηση προς τα πίσω</label><br>', // choice 1
-    '<input type="radio" id="q6ans2" name="question6" onclick="q6.SaveAnswer(1)"><label for="q6ans2">Έναν "γύρο" μάχης πραγματικής αντίστασης με σκοπό την υποταγή</label><br>', // choice 2
-    '<input type="radio" id="q6ans3" name="question6" onclick="q6.SaveAnswer(2)"><label for="q6ans3">Την προσπάθεια εκτέλεσης υποταγής</label><br>', // choice 3
+    'A)<input type="radio" id="q6ans1" name="question6" onclick="q6.SaveAnswer(0)"><label for="q6ans1">Την κίνηση προς τα πίσω</label><br>', // choice 1
+    'B)<input type="radio" id="q6ans2" name="question6" onclick="q6.SaveAnswer(1)"><label for="q6ans2">Έναν "γύρο" μάχης πραγματικής αντίστασης με σκοπό την υποταγή</label><br>', // choice 2
+    'C)<input type="radio" id="q6ans3" name="question6" onclick="q6.SaveAnswer(2)"><label for="q6ans3">Την προσπάθεια εκτέλεσης υποταγής</label><br>', // choice 3
     [0, 1, 0] // correct answers
 )
 
 let q7 = QuizQuestion.MultipleChoice
 (
     'Ποιο από τα παρακάτω ΔΕΝ είναι στάση στο Brazilian Jiu-Jitsu;', // question
-    '<input type="radio" id="q7ans1" name="question7" onclick="q7.SaveAnswer(0)"><label for="q7ans1">Spider Guard</label><br>', // choice 1
-    '<input type="radio" id="q7ans2" name="question7" onclick="q7.SaveAnswer(1)"><label for="q7ans2">Turtle Position</label><br>', // choice 2
-    '<input type="radio" id="q7ans3" name="question7" onclick="q7.SaveAnswer(2)"><label for="q7ans3">Frog Stance</label><br>', // choice 3
+    'A)<input type="radio" id="q7ans1" name="question7" onclick="q7.SaveAnswer(0)"><label for="q7ans1">Spider Guard</label><br>', // choice 1
+    'B)<input type="radio" id="q7ans2" name="question7" onclick="q7.SaveAnswer(1)"><label for="q7ans2">Turtle Position</label><br>', // choice 2
+    'C)<input type="radio" id="q7ans3" name="question7" onclick="q7.SaveAnswer(2)"><label for="q7ans3">Frog Stance</label><br>', // choice 3
     [0, 0, 1] // correct answers
 )
 // #endregion
@@ -345,30 +476,30 @@ let q7 = QuizQuestion.MultipleChoice
 let q8 = QuizQuestion.MultipleAnswer
 (
     'Ποιοι από τους παρακάτω είναι βασικοί στόχοι του Brazilian Jiu-Jitsu;',
-    '<input type="checkbox" id="q8ans1" name="q8" onclick="q8.SaveAnswer(0)"><label for="q8ans1">Υποταγή</label><br>', // choice 1
-    '<input type="checkbox" id="q8ans2" name="q8" onclick="q8.SaveAnswer(1)"><label for="q8ans2">Πάλη στο έδαφος</label><br>', // choice 2
-    '<input type="checkbox" id="q8ans3" name="q8" onclick="q8.SaveAnswer(2)"><label for="q8ans3">Έλενχος του αντιπάλου</label><br>', // choice 3
-    '<input type="checkbox" id="q8ans4" name="q8" onclick="q8.SaveAnswer(3)"><label for="q8ans4">Αφοπλισμός όπλου</label><br>', // choice 4
+    'A)<input type="checkbox" id="q8ans1" name="q8" onclick="q8.SaveAnswer(0)"><label for="q8ans1">Υποταγή</label><br>', // choice 1
+    'B)<input type="checkbox" id="q8ans2" name="q8" onclick="q8.SaveAnswer(1)"><label for="q8ans2">Πάλη στο έδαφος</label><br>', // choice 2
+    'C)<input type="checkbox" id="q8ans3" name="q8" onclick="q8.SaveAnswer(2)"><label for="q8ans3">Έλενχος του αντιπάλου</label><br>', // choice 3
+    'D)<input type="checkbox" id="q8ans4" name="q8" onclick="q8.SaveAnswer(3)"><label for="q8ans4">Αφοπλισμός όπλου</label><br>', // choice 4
     [1, 1, 1, 0] // correct answers
 )
 
 let q9 = QuizQuestion.MultipleAnswer
 (
     'Ποια από τις παρακάτω είναι είδη υποταγών στο Brazilian Jiu-Jitsu;',
-    '<input type="checkbox" id="q9ans1" name="q9" onclick="q9.SaveAnswer(0)"><label for="q9ans1">Kimura Grip</label><br>', // choice 1
-    '<input type="checkbox" id="q9ans2" name="q9" onclick="q9.SaveAnswer(1)"><label for="q9ans2">Triangle Choke</label><br>', // choice 2
-    '<input type="checkbox" id="q9ans3" name="q9" onclick="q9.SaveAnswer(2)"><label for="q9ans3">Armbar</label><br>', // choice 3
-    '<input type="checkbox" id="q9ans4" name="q9" onclick="q9.SaveAnswer(3)"><label for="q9ans4">Kimura</label><br>', // choice 4
+    'A)<input type="checkbox" id="q9ans1" name="q9" onclick="q9.SaveAnswer(0)"><label for="q9ans1">Kimura Grip</label><br>', // choice 1
+    'B)<input type="checkbox" id="q9ans2" name="q9" onclick="q9.SaveAnswer(1)"><label for="q9ans2">Triangle Choke</label><br>', // choice 2
+    'C)<input type="checkbox" id="q9ans3" name="q9" onclick="q9.SaveAnswer(2)"><label for="q9ans3">Armbar</label><br>', // choice 3
+    'D)<input type="checkbox" id="q9ans4" name="q9" onclick="q9.SaveAnswer(3)"><label for="q9ans4">Kimura</label><br>', // choice 4
     [0, 1, 1, 1] // correct answers
 )
 
 let q10 = QuizQuestion.MultipleAnswer
 (
     'Ποιοι από τους παρακάτω αποτελούν μέρος του "guard" στο Brazilian Jiu-Jitsu;',
-    '<input type="checkbox" id="q10ans1" name="q10" onclick="q10.SaveAnswer(0)"><label for="q10ans1">De la Riva</label><br>', // choice 1
-    '<input type="checkbox" id="q10ans2" name="q10" onclick="q10.SaveAnswer(1)"><label for="q10ans2">Half Guard</label><br>', // choice 2
-    '<input type="checkbox" id="q10ans3" name="q10" onclick="q10.SaveAnswer(2)"><label for="q10ans3">Kneebar</label><br>', // choice 3
-    '<input type="checkbox" id="q10ans4" name="q10" onclick="q10.SaveAnswer(3)"><label for="q10ans4">Όλα τα παραπάνω</label><br>', // choice 4
+    'A)<input type="checkbox" id="q10ans1" name="q10" onclick="q10.SaveAnswer(0)"><label for="q10ans1">De la Riva</label><br>', // choice 1
+    'B)<input type="checkbox" id="q10ans2" name="q10" onclick="q10.SaveAnswer(1)"><label for="q10ans2">Half Guard</label><br>', // choice 2
+    'C)<input type="checkbox" id="q10ans3" name="q10" onclick="q10.SaveAnswer(2)"><label for="q10ans3">Kneebar</label><br>', // choice 3
+    'D)<input type="checkbox" id="q10ans4" name="q10" onclick="q10.SaveAnswer(3)"><label for="q10ans4">Όλα τα παραπάνω</label><br>', // choice 4
     [1, 1, 0, 0] // correct answers
 )
 // #endregion
@@ -407,10 +538,10 @@ let q14 = QuizQuestion.PairWords
     <span class="dragWord" id="word2" draggable="true" ondragstart="drag(event)">Cross</span> 
     <span class="dragWord" id="word1" draggable="true" ondragstart="drag(event)">Side</span>
     </div>`,
-    '<div name="q14" class="pairWordsInput" id="option0" ondrop="drop(event, q14)" ondragover="allowDrop(event)"></div><span class="secondWord">Guard</span><br>', // choice 1
-    '<div name="q14" class="pairWordsInput" id="option1" ondrop="drop(event, q14)" ondragover="allowDrop(event)"></div><span class="secondWord">Control</span><br>', // choice 2
-    '<div name="q14" class="pairWordsInput" id="option2" ondrop="drop(event, q14)" ondragover="allowDrop(event)"></div><span class="secondWord">Collar Choke</span><br>', // choice 3
-    '<div name="q14" class="pairWordsInput" id="option3" ondrop="drop(event, q14)" ondragover="allowDrop(event)"></div><span class="secondWord">Take</span><br>', // choice 4
+    'A)<div name="q14" class="pairWordsInput" id="option0" ondrop="drop(event, q14)" ondragover="allowDrop(event)"></div><span class="secondWord">Guard</span><br>', // choice 1
+    'B)<div name="q14" class="pairWordsInput" id="option1" ondrop="drop(event, q14)" ondragover="allowDrop(event)"></div><span class="secondWord">Control</span><br>', // choice 2
+    'C)<div name="q14" class="pairWordsInput" id="option2" ondrop="drop(event, q14)" ondragover="allowDrop(event)"></div><span class="secondWord">Collar Choke</span><br>', // choice 3
+    'D)<div name="q14" class="pairWordsInput" id="option3" ondrop="drop(event, q14)" ondragover="allowDrop(event)"></div><span class="secondWord">Take</span><br>', // choice 4
     ["Open", "Side", "Cross", "Back"] // correct answers
 )
 
@@ -423,10 +554,10 @@ let q15 = QuizQuestion.PairWords
     <span class="dragWord" id="word2" draggable="true" ondragstart="drag(event)">Foot</span> 
     <span class="dragWord" id="word1" draggable="true" ondragstart="drag(event)">Butterfly</span>
     </div>`,
-    '<div name="q15" class="pairWordsInput" id="option0" ondrop="drop(event, q15)" ondragover="allowDrop(event)"></div><span class="secondWord">South Position</span><br>', // choice 1
-    '<div name="q15" class="pairWordsInput" id="option1" ondrop="drop(event, q15)" ondragover="allowDrop(event)"></div><span class="secondWord">Guard</span><br>', // choice 2
-    '<div name="q15" class="pairWordsInput" id="option2" ondrop="drop(event, q15)" ondragover="allowDrop(event)"></div><span class="secondWord">Lock</span><br>', // choice 3
-    '<div name="q15" class="pairWordsInput" id="option3" ondrop="drop(event, q15)" ondragover="allowDrop(event)"></div><span class="secondWord">Grip</span><br>', // choice 4
+    'A)<div name="q15" class="pairWordsInput" id="option0" ondrop="drop(event, q15)" ondragover="allowDrop(event)"></div><span class="secondWord">South Position</span><br>', // choice 1
+    'B)<div name="q15" class="pairWordsInput" id="option1" ondrop="drop(event, q15)" ondragover="allowDrop(event)"></div><span class="secondWord">Guard</span><br>', // choice 2
+    'C)<div name="q15" class="pairWordsInput" id="option2" ondrop="drop(event, q15)" ondragover="allowDrop(event)"></div><span class="secondWord">Lock</span><br>', // choice 3
+    'D)<div name="q15" class="pairWordsInput" id="option3" ondrop="drop(event, q15)" ondragover="allowDrop(event)"></div><span class="secondWord">Grip</span><br>', // choice 4
     ["North", "Butterfly", "Foot", "Kimura"] // correct answers
 )
 
@@ -439,10 +570,10 @@ let q16 = QuizQuestion.PairWords
     <span class="dragWord" id="word2" draggable="true" ondragstart="drag(event)">Bow and</span> 
     <span class="dragWord" id="word1" draggable="true" ondragstart="drag(event)">Knee on</span>
     </div>`,
-    '<div name="q16" class="pairWordsInput" id="option0" ondrop="drop(event, q16)" ondragover="allowDrop(event)"></div><span class="secondWord">Guard</span><br>', // choice 1
-    '<div name="q16" class="pairWordsInput" id="option1" ondrop="drop(event, q16)" ondragover="allowDrop(event)"></div><span class="secondWord">Belly</span><br>', // choice 2
-    '<div name="q16" class="pairWordsInput" id="option2" ondrop="drop(event, q16)" ondragover="allowDrop(event)"></div><span class="secondWord">Arrow</span><br>', // choice 3
-    '<div name="q16" class="pairWordsInput" id="option3" ondrop="drop(event, q16)" ondragover="allowDrop(event)"></div><span class="secondWord">Choke</span><br>', // choice 4
+    'A)<div name="q16" class="pairWordsInput" id="option0" ondrop="drop(event, q16)" ondragover="allowDrop(event)"></div><span class="secondWord">Guard</span><br>', // choice 1
+    'B)<div name="q16" class="pairWordsInput" id="option1" ondrop="drop(event, q16)" ondragover="allowDrop(event)"></div><span class="secondWord">Belly</span><br>', // choice 2
+    'C)<div name="q16" class="pairWordsInput" id="option2" ondrop="drop(event, q16)" ondragover="allowDrop(event)"></div><span class="secondWord">Arrow</span><br>', // choice 3
+    'D)<div name="q16" class="pairWordsInput" id="option3" ondrop="drop(event, q16)" ondragover="allowDrop(event)"></div><span class="secondWord">Choke</span><br>', // choice 4
     ["Half", "Knee on", "Bow and", "Baseball bat"] // correct answers
 )
 // #endregion
@@ -457,10 +588,10 @@ let q17 = QuizQuestion.WordArrangement
     <span class="dragWord" id="word2" draggable="true" ondragstart="drag(event)">Guard Pass</span> 
     <span class="dragWord" id="word1" draggable="true" ondragstart="drag(event)">Take Down</span>
     </div>`,
-    '<div name="q17" class="pairWordsInput" id="option0" ondrop="drop(event, q17)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 1
-    '<div name="q17" class="pairWordsInput" id="option1" ondrop="drop(event, q17)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 2
-    '<div name="q17" class="pairWordsInput" id="option2" ondrop="drop(event, q17)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 3
-    '<div name="q17" class="pairWordsInput" id="option3" ondrop="drop(event, q17)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 4
+    'A)<div name="q17" class="pairWordsInput" id="option0" ondrop="drop(event, q17)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 1
+    'B)<div name="q17" class="pairWordsInput" id="option1" ondrop="drop(event, q17)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 2
+    'C)<div name="q17" class="pairWordsInput" id="option2" ondrop="drop(event, q17)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 3
+    'D)<div name="q17" class="pairWordsInput" id="option3" ondrop="drop(event, q17)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 4
     ["Take Down", "Guard Pass", "Control", "Submission"] // correct answers
 )
 
@@ -472,9 +603,9 @@ let q18 = QuizQuestion.WordArrangement
     <span class="dragWord" id="word2" draggable="true" ondragstart="drag(event)">Σπάσιμο χεριού</span> 
     <span class="dragWord" id="word1" draggable="true" ondragstart="drag(event)">Ρίξιμο βάρος προς τα πίσω</span>
     </div>`,
-    '<div name="q18" class="pairWordsInput" id="option0" ondrop="drop(event, q18)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 1
-    '<div name="q18" class="pairWordsInput" id="option1" ondrop="drop(event, q18)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 2
-    '<div name="q18" class="pairWordsInput" id="option2" ondrop="drop(event, q18)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 3
+    'A)<div name="q18" class="pairWordsInput" id="option0" ondrop="drop(event, q18)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 1
+    'B)<div name="q18" class="pairWordsInput" id="option1" ondrop="drop(event, q18)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 2
+    'C)<div name="q18" class="pairWordsInput" id="option2" ondrop="drop(event, q18)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 3
     '<div name="q18" id="option3" ondrop="drop(event, q18)" ondragover="allowDrop(event)" hidden></div><span class="secondWord"></span><br>', // hidden
     ["Γέφυρα με την μέση", "Ρίξιμο βάρος προς τα πίσω", "Σπάσιμο χεριού", ""] // correct answers
 )
@@ -487,9 +618,9 @@ let q19 = QuizQuestion.WordArrangement
     <span class="dragWord" id="word2" draggable="true" ondragstart="drag(event)">Guard pass</span> 
     <span class="dragWord" id="word1" draggable="true" ondragstart="drag(event)">Takedown</span>
     </div>`,
-    '<div name="q19" class="pairWordsInput" id="option0" ondrop="drop(event, q19)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 1
-    '<div name="q19" class="pairWordsInput" id="option1" ondrop="drop(event, q19)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 2
-    '<div name="q19" class="pairWordsInput" id="option2" ondrop="drop(event, q19)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 3
+    'A)<div name="q19" class="pairWordsInput" id="option0" ondrop="drop(event, q19)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 1
+    'B)<div name="q19" class="pairWordsInput" id="option1" ondrop="drop(event, q19)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 2
+    'C)<div name="q19" class="pairWordsInput" id="option2" ondrop="drop(event, q19)" ondragover="allowDrop(event)"></div><span class="secondWord"></span><br>', // choice 3
     '<div name="q19" id="option3" ondrop="drop(event, q19)" ondragover="allowDrop(event)" hidden></div><span class="secondWord"></span><br>', // hidden
     ["Takedown", "Guard pass", "Mount", ""] // correct answers
 )
@@ -497,21 +628,88 @@ let q19 = QuizQuestion.WordArrangement
 
 // #endregion
 
+// #region stuff...
 let questionDataBase = [q0, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16, q17, q18, q19]
-//let questionDataBase = [q0, q1, q2, q0, q1, q2]
 
-// Change the innerHTML of the main page to a question
-function showQuestion(questionNum) {
-    document.getElementById("mainForm").innerHTML = `<h3>Ερώτηση ${questionNum + 1}</h3>`;
-    document.getElementById("mainForm").innerHTML += questionDataBase[questionsIndex[questionNum]].Question;
-    //document.getElementById("mainForm").innerHTML = questionsIndex; // (uncomment to check if the random suff works)
+// Calculate the total_time_left by summing up the
+// local_time_left of each question
+function getTotalTimeLeft() {
+    let total_time_left = 0;
+    for (let i = 0; i < 6; i++) {
+        total_time_left += questionDataBase[questionsIndex[i]].local_time_left;
+    }
+    return total_time_left;
 }
 
+// Initialize the value of the timer to be that of the sum of the time of all the questions
+document.getElementById("timer").innerHTML = `Απομένουν συνολικά: ${getTotalTimeLeft()} δευτερόλεπτα`;
 
-let questionNum = 0
+let questionShown;
+let quizOver = false;
+// Change the innerHTML of the main page to a question
+function showQuestion(questionNum) {
+    questionShown = questionDataBase[questionsIndex[questionNum]];
+    let local_time_left_message;
+    if (questionShown.local_time_left > 0) {
+        local_time_left_message = ` (${questionShown.local_time_left} δευτερόλεπτα)`;
+    } else {
+        local_time_left_message = ` Τέλος χρόνου ερώτησης`;
+    }
+    document.getElementById("mainForm").innerHTML = `<h3>Ερώτηση ${questionNum + 1}<span id="local_time">${local_time_left_message}</span></h3>`;
+    document.getElementById("mainForm").innerHTML += questionShown.Question;
+}
+
 // questionNum is always equal to 0 when this runs
 // It shows the first question when the page loads for the first time
+let questionNum = 0;
 showQuestion(questionNum);
+
+function UpdateTimeLeft() {
+   if (quizOver == false) {
+        // If there is no more time left show the results
+        if (getTotalTimeLeft() <= 0) {
+            ShowResults(true);
+        } else {
+            // if there is no more question time left, disable the ability to chose/change answer
+            if (questionShown.local_time_left <= 0) {
+                DisableAnswers();
+                let local_time_left_message = ` Τέλος χρόνου ερώτησης`;
+                document.getElementById("local_time").innerHTML = local_time_left_message;
+                questionShown.UpdateLocalTimeLeft() 
+            } else {
+                let local_time_left_message = ` (${questionShown.UpdateLocalTimeLeft()} δευτερόλεπτα)`;
+                document.getElementById("local_time").innerHTML = local_time_left_message;
+            }
+            document.getElementById("timer").innerHTML = `Απομένουν συνολικά: ${getTotalTimeLeft()} δευτερόλεπτα`;
+        }
+   } else {
+    clearInterval(timer);
+   }
+}
+let timer = setInterval(UpdateTimeLeft, 1000);
+
+// Disables the ability to chose/change the answers
+function DisableAnswers() {
+    // finds all child elements and stores them in an array "allChildren"
+    let allChildren = document.getElementById("mainForm").children;
+    for (let i = 0; i < allChildren.length; i++) {
+        // if child is an input simply disable it
+        if(allChildren[i] instanceof HTMLInputElement) {
+            allChildren[i].disabled = true;
+        // if child is a div then the children of the div element
+        // are draggable span elements, and must be turned off
+        } else if (allChildren[i] instanceof HTMLDivElement) {
+            let draggableElements = allChildren[i].children;
+            for (let j = 0; j < draggableElements.length; j++) { 
+                draggableElements[j].draggable = false;
+            }
+        }
+        
+    }
+}
+// #endregion
+
+// #region Button functions
 
 // Change to the next question
 function NextQuestion() {
@@ -525,37 +723,53 @@ function PrevQuestion() {
     showQuestion(questionNum);
 }
 
-// TODO: Show the final resutls
-function ShowResults() {
-    document.getElementById("mainForm").innerHTML = "";
-    let userAnswers;
-    let correctAnswers;
+// Creates the Results page that appears
+// after pressing the "Submit" button
+function ShowResults(time_is_up=false) {
+    let resultPage = document.getElementById("mainForm");
+    if (time_is_up) {
+        resultPage.innerHTML = "<h3>Τέλος Χρόνου!<h3>"; 
+    } else {
+        resultPage.innerHTML = "";
+    } 
+    let totalScore = 0;
+    let currentQuestion;
+    // Calculate the score for each of the 6 questions
     for (let i = 0; i < 6; i++) {
-        document.getElementById("mainForm").innerHTML += `<h3>Ερώτηση ${i + 1}</h3>`;
-        document.getElementById("mainForm").innerHTML += questionDataBase[questionsIndex[i]].Question;
-
-        userAnswers = questionDataBase[questionsIndex[i]].userAnswers;
-        correctAnswers = questionDataBase[questionsIndex[i]].correctAnswers;
-
-        if (userAnswers == correctAnswers) {
-            document.getElementById("mainForm").innerHTML += "Correct!";
+        currentQuestion = questionDataBase[questionsIndex[i]];
+        totalScore += currentQuestion.CalqulateScore();
+    }
+    // Convert the result into a percentage and show it
+    let pecentageResult = Math.ceil(totalScore/6 * 100);
+    resultPage.innerHTML += `<h3>Αποτέλεσμα: ${pecentageResult}%</h3>`;
+    // Show each questions along with the answers of the user.
+    // Also show the correct answer(s) if the user was wrong.
+    for (let i = 0; i < 6; i++) {
+        currentQuestion = questionDataBase[questionsIndex[i]];
+        // Show silly icon next to each question
+        if (currentQuestion.CalqulateScore() == 1) {
+            resultPage.innerHTML += `<h3>Ερώτηση ${i + 1} <i class="fa fa-check"></i></h3>`;
         } else {
-            document.getElementById("mainForm").innerHTML += "Fail!";
+            resultPage.innerHTML += `<h3>Ερώτηση ${i + 1} <i class="fa fa-times"></i></h3>`;
+        }      
+        resultPage.innerHTML += questionDataBase[questionsIndex[i]].Question + "<br>";
+        // Show correct answer(s) if the user was wrong
+        if (currentQuestion.CalqulateScore() != 1) {
+            resultPage.innerHTML += currentQuestion.ShowCorrectAnswers();
         }
     }
+    // quiz is over!
+    quizOver = true;
+    // Disable the ability for the user to change his answers
+    DisableAnswers();
+    // Hide the buttons that are no longer needed
+    document.getElementById("prevBtn").hidden = true;
+    document.getElementById("nextBtn").hidden = true;
+    document.getElementById("subBtn").hidden = true;
 }
+// #endregion
 
-// GYAAT
-document.getElementById("timer").innerHTML = `Time left: ${total_time_left} seconds`;
-
-// Update the count down every 1 second
-// TODO: https://codepen.io/vaughnantonyan/pen/baypWZ (maybe)
-let total_time_counter = setInterval(function() {
-    total_time_left--;
-    document.getElementById("timer").innerHTML = `Time left: ${total_time_left} seconds`;
-}, 1000);
-
-//#region Drag related functions
+// #region Drag related functions
 
 // Prevents the allowDrop event to be disabled
 // when hovering a draggable element over the div
@@ -621,3 +835,5 @@ function drop(event, target_question) {
     target_question.SaveAnswer(save_answer_data);
 }
 // #endregion
+
+

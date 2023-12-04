@@ -106,6 +106,14 @@ h3 {
   border:1px solid black;
 }
 
+.fa-times {
+  color: brown;
+}
 
+#local_time {
+  font-size: 12px;
+  color: rgb(48 48 48);
+  font-style: italic;
+}
 
   

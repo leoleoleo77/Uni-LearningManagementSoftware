@@ -5,12 +5,12 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-  }
+}
 
+const NUMBER_OF_QUESTIONS = 20;
 // Fill and array with i number of random numbers that range between
 // the two numbers inside the getRandomInt(min, max) method
 let questionsIndex = [];
-const NUMBER_OF_QUESTIONS = 20;
 // Define the first number to use as a point of reference
 questionsIndex[0] = getRandomInt(0, NUMBER_OF_QUESTIONS);
 let randomInt;
@@ -240,6 +240,7 @@ class QuizQuestion {
         }
     }
 
+    // TODO: remove spaces when calculating complete sentence questions
     // Calculate the score for each type of question
     CalqulateScore() {
         if (this.questionType == "TrueOrFalse" || this.questionType == "MultipleChoice") {
@@ -273,9 +274,11 @@ class QuizQuestion {
                 return (numOfCorrAns - numOfWrongAns)/answers;
             }
         // For questions where the user have to complete the sentence
-        // the check is case insensitive
+        // the check is case insensitive and doesnt care for spaces
         } else if (this.questionType == "CompleteSentence") {   
-            if(this.userAnswers[0].toUpperCase() == this.correctAnswers[0].toUpperCase()) {
+            let userAnswer = this.userAnswers[0].toUpperCase().replace(" ", "");
+            let correctAnswer = this.correctAnswers[0].toUpperCase().replace(" ", "");
+            if(userAnswer == correctAnswer) {
                 return 1
             }
             return 0
@@ -617,7 +620,7 @@ function showQuestion(questionNum) {
     questionShown = questionDataBase[questionsIndex[questionNum]];
     let local_time_left_message;
     if (questionShown.local_time_left > 0) {
-        local_time_left_message = ` <i class="fa fa-clock-o" aria-hidden="true"></i> ${questionShown.local_time_left} δευτερόλεπτα`;
+        local_time_left_message = ` <i class="fa fa-clock-o" aria-hidden="true"></i> ${questionShown.local_time_left} δευτερόλεπτα</span></h3>`;
     } else {
         local_time_left_message = ` Τέλος χρόνου ερώτησης`;
     }

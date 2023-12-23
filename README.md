@@ -1,1 +1,2 @@
-[embed]http://example.com/file.pdf[/embed]
+
+https://docs.google.com/viewer?url=${http://example.com/file.pdf}
